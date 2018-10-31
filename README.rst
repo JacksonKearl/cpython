@@ -7,7 +7,7 @@ in MIT's 6.172 (Performance Engineering of Software Systems).
 It turns out that even the allocate-only reference implementation provided here has a 60% faster startup as compared to base CPython,
 and in some test cases has marginally better runtime performance as well.
 
-With a fully fleshed out allocator, I've seen the same 60% startup time increase, along with 10% faster runtimes across the board, again as compared to base CPython.
+With a fully fleshed out allocator, I've seen the same 60% startup time increase, along with up to 10% faster runtimes across the board, again as compared to base CPython.
 
 How to plug malloc
 -------------------
