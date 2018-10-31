@@ -1,3 +1,24 @@
+Purpose of this Fork
+====================
+
+This is a fork of CPython with pluggable memory allocation routines, made to demo the allocators built by students
+in MIT's 6.172 (Performance Engineering of Software Systems).
+
+It turns out that even the allocate-only reference implementation provided here has a 60% faster startup as compared to base CPython,
+and in some test cases has marginally better runtime performance as well.
+
+With a fully fleshed out allocator, I've seen 10% faster runtimes across the board, again as compared to base CPython.
+
+How to plug malloc
+-------------------
+To use your own memory allocator with this Python, implement the `my_malloc`, `my_realloc`, `my_free`,
+and `my_init` functions in `Objects/mymalloc.h`.
+
+Be sure to obey the real semantics of `realloc`, which state that passing `NULL` as the previous pointer causes
+`realloc` to become `malloc`. The original staff reference does not do this, and as such we will not require submissions
+to do this, but it is needed for your implementation to work in CPython.
+
+
 This is Python version 3.8.0 alpha 0
 ====================================
 
@@ -73,8 +94,8 @@ elsewhere it's just ``python``.
 
 If you are running on macOS with the latest updates installed, make sure to install
 openSSL or some other SSL software along with Homebrew or another package manager.
-If issues persist, see https://devguide.python.org/setup/#macos-and-os-x for more 
-information. 
+If issues persist, see https://devguide.python.org/setup/#macos-and-os-x for more
+information.
 
 On macOS, if you have configured Python with ``--enable-framework``, you
 should use ``make frameworkinstall`` to do the installation.  Note that this
