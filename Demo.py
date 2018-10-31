@@ -13,12 +13,14 @@ def timing(f):
 
 @timing
 def buildingAString():
+    "increasingly large memory allocations, a good coalese would probably do you well here"
     s = ""
     for i in range(10000):
         s = s + "_" + str(i)
 
 @timing
 def constructingObjects():
+    "a ton of smaller allocations"
     class Node:
         def __init__(self, next, data):
             self.next = next
@@ -29,6 +31,7 @@ def constructingObjects():
         l = Node(l, i)
 
 def doingMath():
+    "even more even smaller allocations"
     start = time.time()
     elapsed = lambda: (time.time() - start) * 1000
 
@@ -39,7 +42,7 @@ def doingMath():
             if _i % 2 == 0: _i = _i // 2
             else: _i = 3*_i + 1
         i = i + 1
-    print("Proved Collatz for i = 1.." + str(i) + " in just one second!")
+    print("Proved Collatz for i = (1..." + str(i) + ") in just one second!")
 
 
 print("Hello from a Python that allocated this very string using *your* code. Go you!")

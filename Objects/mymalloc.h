@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <assert.h>
+#include <stdbool.h>
 
 #include "memlib.h"
 
@@ -17,33 +19,6 @@
 
 // The smallest aligned size that will hold a size_t value.
 #define SIZE_T_SIZE (ALIGN(sizeof(size_t)))
-
-// check - This checks our invariant that the size_t header before every
-// block points to either the beginning of the next block, or the end of the
-// heap.
-int my_check()
-{
-    char *p;
-    char *lo = (char *)mem_heap_lo();
-    char *hi = (char *)mem_heap_hi() + 1;
-    size_t size = 0;
-
-    p = lo;
-    while (lo <= p && p < hi)
-    {
-        size = ALIGN(*(size_t *)p + SIZE_T_SIZE);
-        p += size;
-    }
-
-    if (p != hi)
-    {
-        printf("Bad headers did not end at heap_hi!\n");
-        printf("heap_lo: %p, heap_hi: %p, size: %lu, p: %p\n", lo, hi, size, p);
-        return -1;
-    }
-
-    return 0;
-}
 
 // init - Initialize the malloc package.  Called once before any other
 // calls are made.  Since this is a very simple implementation, we just

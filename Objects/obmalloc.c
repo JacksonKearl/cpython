@@ -1,4 +1,5 @@
 #include "Python.h"
+#include "mymalloc.h"
 
 #include <stdbool.h>
 
@@ -63,16 +64,8 @@ static void* _PyObject_Realloc(void *ctx, void *ptr, size_t size);
 #endif
 
 // #define SHOW_TRACE
-#define USE_MY_MALLOC
 
-#ifdef USE_MY_MALLOC
-#include "mymalloc.h"
-#else
-#define my_malloc malloc
-#define my_free free
-#define my_realloc realloc
-#endif
-
+static bool hasInitalized = false;
 
 static void *
 _PyMem_RawMalloc(void *ctx, size_t size)
@@ -81,6 +74,14 @@ _PyMem_RawMalloc(void *ctx, size_t size)
        for malloc(0), which would be treated as an error. Some platforms would
        return a pointer with no memory behind it, which would break pymalloc.
        To solve these problems, allocate an extra byte. */
+
+    if (!hasInitalized)
+    {
+        // yes there has to be a better way to do this, but I'll take a 99.9999% predictable branch over figuring out what that better way is
+        my_init();
+        hasInitalized = true;
+    }
+
     if (size == 0)
         size = 1;
     void * ptr = my_malloc(size);
@@ -97,6 +98,14 @@ _PyMem_RawCalloc(void *ctx, size_t nelem, size_t elsize)
        for calloc(0, 0), which would be treated as an error. Some platforms
        would return a pointer with no memory behind it, which would break
        pymalloc.  To solve these problems, allocate an extra byte. */
+
+    if (!hasInitalized)
+    {
+        // yes there has to be a better way to do this, but I'll take a 99.9999% predictable branch over figuring out what that better way is
+        my_init();
+        hasInitalized = true;
+    }
+
     if (nelem == 0 || elsize == 0) {
         nelem = 1;
         elsize = 1;
@@ -112,6 +121,14 @@ _PyMem_RawCalloc(void *ctx, size_t nelem, size_t elsize)
 static void *
 _PyMem_RawRealloc(void *ctx, void *ptr, size_t size)
 {
+
+    if (!hasInitalized)
+    {
+        // yes there has to be a better way to do this, but I'll take a 99.9999% predictable branch over figuring out what that better way is
+        my_init();
+        hasInitalized = true;
+    }
+
     if (size == 0)
         size = 1;
     void * nptr = my_realloc(ptr, size);
