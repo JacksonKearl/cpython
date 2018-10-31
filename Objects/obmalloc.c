@@ -62,6 +62,17 @@ static void _PyObject_Free(void *ctx, void *p);
 static void* _PyObject_Realloc(void *ctx, void *ptr, size_t size);
 #endif
 
+// #define SHOW_TRACE
+#define USE_MY_MALLOC
+
+#ifdef USE_MY_MALLOC
+#include "mymalloc.h"
+#else
+#define my_malloc malloc
+#define my_free free
+#define my_realloc realloc
+#endif
+
 
 static void *
 _PyMem_RawMalloc(void *ctx, size_t size)
@@ -72,7 +83,11 @@ _PyMem_RawMalloc(void *ctx, size_t size)
        To solve these problems, allocate an extra byte. */
     if (size == 0)
         size = 1;
-    return malloc(size);
+    void * ptr = my_malloc(size);
+#ifdef SHOW_TRACE
+    fprintf(stderr, "a %lld %p\n", size, ptr);
+#endif
+    return ptr;
 }
 
 static void *
@@ -86,7 +101,12 @@ _PyMem_RawCalloc(void *ctx, size_t nelem, size_t elsize)
         nelem = 1;
         elsize = 1;
     }
-    return calloc(nelem, elsize);
+    void * ptr = my_malloc(nelem * elsize);
+    memset(ptr, 0, nelem * elsize);
+#ifdef SHOW_TRACE
+    fprintf(stderr, "a %lld %p\n", nelem * elsize, ptr);
+#endif
+    return ptr;
 }
 
 static void *
@@ -94,13 +114,20 @@ _PyMem_RawRealloc(void *ctx, void *ptr, size_t size)
 {
     if (size == 0)
         size = 1;
-    return realloc(ptr, size);
+    void * nptr = my_realloc(ptr, size);
+#ifdef SHOW_TRACE
+    fprintf(stderr, "r %p %lld %p\n", ptr, size, nptr);
+#endif
+    return nptr;
 }
 
 static void
 _PyMem_RawFree(void *ctx, void *ptr)
 {
-    free(ptr);
+#ifdef SHOW_TRACE
+    fprintf(stderr, "f %p\n", ptr);
+#endif
+    my_free(ptr);
 }
 
 
