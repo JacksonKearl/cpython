@@ -11,11 +11,11 @@ With a fully fleshed out allocator, I've seen 10% faster runtimes across the boa
 
 How to plug malloc
 -------------------
-To use your own memory allocator with this Python, implement the `my_malloc`, `my_realloc`, `my_free`,
-and `my_init` functions in `Objects/mymalloc.h`.
+To use your own memory allocator with this Python, implement the ``my_malloc``, ``my_realloc``, ``my_free``,
+and ``my_init`` functions in ``Objects/mymalloc.h``.
 
-Be sure to obey the real semantics of `realloc`, which state that passing `NULL` as the previous pointer causes
-`realloc` to become `malloc`. The original staff reference does not do this, and as such we will not require submissions
+Be sure to obey the real semantics of ``realloc``, which state that passing ``NULL`` as the previous pointer causes
+``realloc`` to become ``malloc``. The original staff reference does not do this, and as such we will not require submissions
 to do this, but it is needed for your implementation to work in CPython.
 
 
