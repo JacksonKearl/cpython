@@ -9,6 +9,8 @@ and in some test cases has marginally better runtime performance as well.
 
 With a fully fleshed out allocator, I've seen the same 60% startup time increase, along with up to 10% faster runtimes across the board, again as compared to base CPython.
 
+Note: this implementation emulates sbrk in the same way as mdriver, in that it allocates a bunch of memory at start, and hands that out to malloc as needed. This is a possible reason for the performance increase, and it may be considered to be hacky, but if thats all it takes to get the kind of speedups we're seeing, I'm all for it.
+
 How to plug malloc
 -------------------
 To use your own memory allocator with this Python, implement the ``my_malloc``, ``my_realloc``, ``my_free``,
