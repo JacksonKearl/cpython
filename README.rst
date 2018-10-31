@@ -7,7 +7,7 @@ in MIT's 6.172 (Performance Engineering of Software Systems).
 It turns out that even the allocate-only reference implementation provided here has a 60% faster startup as compared to base CPython,
 and in some test cases has marginally better runtime performance as well.
 
-With a fully fleshed out allocator, I've seen 10% faster runtimes across the board, again as compared to base CPython.
+With a fully fleshed out allocator, I've seen the same 60% startup time increase, along with 10% faster runtimes across the board, again as compared to base CPython.
 
 How to plug malloc
 -------------------
@@ -17,6 +17,18 @@ and ``my_init`` functions in ``Objects/mymalloc.h``.
 Be sure to obey the real semantics of ``realloc``, which state that passing ``NULL`` as the previous pointer causes
 ``realloc`` to become ``malloc``. The original staff reference does not do this, and as such we will not require submissions
 to do this, but it is needed for your implementation to work in CPython.
+
+Testing your implementation
+--------------------------
+To test just startup::
+    $ time ./python.exe StartupTime.py
+
+Starting CPython requires something like 2000 malloc's, so small increases in performance here can have a large impact on end user experience.
+
+To test with some sample Python routines::
+    $ ./python.exe Demo.py
+
+I've seen around 10% speedup on these routines, but theres a decent amount of variance.
 
 
 This is Python version 3.8.0 alpha 0
