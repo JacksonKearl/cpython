@@ -24,6 +24,7 @@ To test just startup::
     $ time ./python.exe StartupTime.py
 
 Starting CPython requires something like 2000 malloc's, so small increases in performance here can have a large impact on end user experience.
+The original CPython starts up in 50ms on my computer, but even this most simple implementation of ``malloc`` requires only 20ms for startup.
 
 To test with some sample Python routines::
     $ ./python.exe Demo.py
